@@ -1,0 +1,46 @@
+ext.buildTime = new Date().toInstant()
+
+buildscript {
+    ext.springBootVersion = '4.1.+'
+    ext.springCloudVersion = '2025.1.+'
+    ext.springDataVersion = '2026.0.+'
+
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.gorylenko.gradle-git-properties:gradle-git-properties:4.+'
+        classpath 'org.cyclonedx:cyclonedx-gradle-plugin:3.+'
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+        classpath 'io.spring.dependency-management:io.spring.dependency-management.gradle.plugin:1.+'
+    }
+}
+
+allprojects {
+    apply from: "$rootDir/gradle/common.gradle"
+}
+
+wrapper {
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+dependencies {
+    implementation 'io.micrometer:micrometer-tracing'
+    implementation 'org.springframework:spring-webmvc'
+    implementation 'org.springframework.boot:spring-boot-actuator-autoconfigure'
+    implementation 'org.springframework.boot:spring-boot-tomcat'
+    implementation 'org.springframework.boot:spring-boot-health'
+    implementation 'com.google.guava:guava:latest.release'
+    implementation 'org.slf4j:slf4j-api'
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'io.github.openfeign:feign-micrometer'
+    implementation 'ch.qos.logback:logback-core' // get the version managed by Boot
+    implementation('ch.qos.logback.access:logback-access-tomcat:latest.release') {
+        exclude group: 'org.apache.tomcat'
+        exclude group: 'jakarta.servlet'
+        exclude group: 'ch.qos.logback', module: 'logback-core'
+    }
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core'
+
+    compileOnly 'net.ttddyy.observation:datasource-micrometer-spring-boot:2.+'
+}
